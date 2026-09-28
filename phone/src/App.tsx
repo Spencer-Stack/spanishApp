@@ -33,12 +33,15 @@ export default function App() {
   }, []);
 
   if (!ready) {
-    return <div className="h-screen w-screen bg-neutral-0" />;
+    return <div className="h-dvh w-screen bg-neutral-0" />;
   }
 
   return (
-    <div className="flex h-screen w-screen flex-col bg-neutral-0">
-      <div className="min-h-0 flex-1 overflow-y-auto">
+    // h-dvh, not h-screen (100vh) — mobile Safari's address bar makes 100vh
+    // taller than what's actually visible, which is exactly what was
+    // pushing the bottom nav off-screen. dvh tracks the real visible area.
+    <div className="flex h-dvh w-screen flex-col overflow-hidden bg-neutral-0">
+      <div className="min-h-0 flex-1 overflow-hidden">
         {tab === 'words' && <WordsScreen items={items} wordsMeta={wordsMeta} onWordsLoaded={handleWordsLoaded} />}
         {tab === 'test' && <TestScreen items={items} onEventRecorded={refreshPendingCount} />}
         {tab === 'sync' && <SyncScreen onSynced={refreshPendingCount} />}
