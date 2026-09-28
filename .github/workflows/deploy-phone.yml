@@ -1,0 +1,74 @@
+name: Deploy phone app to GitHub Pages
+
+# Builds and publishes only phone/ (the iPhone companion PWA) — the desktop
+# app is never hosted, it only runs locally via the File System Access API.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'phone/**'
+      - 'src/lib/**'
+      - 'src/types/**'
+      - '.github/workflows/deploy-phone.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # phone/ reuses several files directly from ../src (see src/lib/phoneSync.ts
+      # and friends) via relative imports rather than copying them — so tsc
+      # needs react/papaparse/etc. resolvable from THOSE files' own location
+      # too, which means the root project's node_modules, not just phone's.
+      - name: Install root dependencies
+        run: npm install
+
+      - name: Install phone dependencies
+        working-directory: phone
+        run: npm install --legacy-peer-deps
+
+      - name: Build
+        working-directory: phone
+        run: npm run build
+
+      # enablement: true creates the Pages site via the API if it doesn't
+      # exist yet — without this, the very first run fails because Pages has
+      # never been turned on for the repo (confirmed: it does, in fact, fail
+      # that way without this flag).
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: phone/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

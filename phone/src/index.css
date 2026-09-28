@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+/* Design tokens mirrored from the desktop app's src/index.css — kept as a
+ * plain copy (not a cross-project CSS @import) since this is a visual
+ * constant, not logic; if the desktop palette changes, copy the block over. */
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+
+  --color-neutral-0: #ffffff;
+  --color-neutral-25: #fbfbfb;
+  --color-neutral-50: #f6f6f7;
+  --color-neutral-100: #eeeeef;
+  --color-neutral-150: #e4e4e6;
+  --color-neutral-200: #d9d9dc;
+  --color-neutral-300: #bcbcc1;
+  --color-neutral-400: #96969d;
+  --color-neutral-500: #75757c;
+  --color-neutral-600: #57575e;
+  --color-neutral-700: #3f3f45;
+  --color-neutral-800: #29292d;
+  --color-neutral-850: #202023;
+  --color-neutral-900: #18181a;
+  --color-neutral-950: #101012;
+
+  --color-accent-blue: #4c6ef5;
+  --color-accent-blue-muted: #6a86e0;
+  --color-accent-green: #4b9a72;
+  --color-accent-amber: #b8863c;
+  --color-accent-red: #c05a4e;
+
+  --animate-fade-in: fade-in 160ms ease-out;
+  --animate-slide-up: slide-up 180ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+:root.dark {
+  color-scheme: dark;
+
+  --color-neutral-0: #101012;
+  --color-neutral-25: #18181a;
+  --color-neutral-50: #202023;
+  --color-neutral-100: #29292d;
+  --color-neutral-150: #3f3f45;
+  --color-neutral-200: #57575e;
+  --color-neutral-300: #75757c;
+  --color-neutral-400: #96969d;
+  --color-neutral-500: #bcbcc1;
+  --color-neutral-600: #d9d9dc;
+  --color-neutral-700: #e4e4e6;
+  --color-neutral-800: #eeeeef;
+  --color-neutral-900: #fbfbfb;
+  --color-neutral-950: #ffffff;
+
+  --color-accent-blue: #6c8bf7;
+  --color-accent-blue-muted: #7d97e8;
+  --color-accent-green: #5aad82;
+  --color-accent-amber: #cf9a4c;
+  --color-accent-red: #d16f63;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-neutral-50);
+  color: var(--color-neutral-900);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  color: inherit;
+  font-size: 16px; /* prevents iOS Safari's auto-zoom-on-focus below 16px */
+}
+
+/* iPhone safe areas (notch / home indicator) */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
